@@ -5,7 +5,7 @@ export async function postCustomers(req, res){
 
     try{
         const haveCustomer = await db.query(`SELECT * FROM customers
-            WHERE name = $1`,[name]);
+            WHERE cpf = $1`,[cpf]);
         if(haveCustomer.rows[0]) return res.status(409).send('This customers already exist');
 
         await db.query(`INSERT INTO customers (name, phone, cpf, birthday) 
@@ -27,5 +27,19 @@ export async function getCustomers(req, res){
 }
 
 export async function updateCustomers(req, res){
+    const {name, phone, cpf, birthday} = req.body;
+    const id = req.params.id;
+    try{
+        const existentCpf = await db.query(`SELECT * FROM customers
+            WHERE cpf = $1 AND id <> $2`
+            ,[cpf, id]);
+        if(existentCpf.rows[0]) return res.status(409).send('This cpf belongs to someone else');
+        await db.query(`UPDATE customers 
+            SET name = $1, phone = $2, birthday = $3
+            WHERE id = $4`
+            ,[name, phone, birthday, id])
+    }catch(err){
+        res.status(500).send(err.message);
+    };
     res.send('updateCustomers')
 }
