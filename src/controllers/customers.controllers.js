@@ -18,7 +18,12 @@ export async function postCustomers(req, res){
 }
 
 export async function getCustomers(req, res){
-    res.send('getCustomers')
+    try{
+        const customers = await db.query(`SELECT * FROM customers`);
+        res.send(customers.rows)
+    }catch(err){
+        res.status(500).send(err.message);
+    }
 }
 
 export async function updateCustomers(req, res){
