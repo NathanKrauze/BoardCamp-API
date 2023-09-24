@@ -30,7 +30,7 @@ export async function getCustomersById(req, res){
     const id = req.params.id;
     try{
         const customer = await db.query(`SELECT * FROM customers WHERE id = $1`, [id]);
-        if(!customer.rows[0]) return res.status(400).send('Customer not founded')
+        if(!customer.rows[0]) return res.status(404).send('Customer not founded')
         res.send(customer.rows[0])
     }catch(err){
         res.status(500).send(err.message);
@@ -49,8 +49,8 @@ export async function updateCustomers(req, res){
             SET name = $1, phone = $2, birthday = $3
             WHERE id = $4`
             ,[name, phone, birthday, id])
+        res.sendStatus(200);
     }catch(err){
         res.status(500).send(err.message);
     };
-    res.send('updateCustomers')
 }
