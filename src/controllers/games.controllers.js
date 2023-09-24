@@ -11,12 +11,17 @@ export async function postGames(req, res){
         await db.query(`INSERT INTO games (name, image, "stockTotal", "pricePerDay") 
             VALUES ($1, $2, $3, $4)`,
             [name, image, stockTotal, pricePerDay]);
+        res.sendStatus(201);
     }catch(err){
         res.status(500).send(err.message);
     }
-    res.send('name')
 }
 
 export async function getGames(req, res){
-    res.send('getGames')
+    try{
+        const games = await db.query(`SELECT * FROM games`);
+        res.send(games.rows)
+    }catch(err){
+        res.status(500).send(err.message);
+    }
 }
