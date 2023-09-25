@@ -24,8 +24,6 @@ export async function getCustomers(req, res) {
             const newCustomer = { ...customer, birthday: customer.birthday.toISOString().slice(0, 10) };
             return newCustomer;
         })
-        console.log(formatCustomers);
-        res.send(formatCustomers);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -46,7 +44,7 @@ export async function getCustomersById(req, res) {
 export async function updateCustomers(req, res) {
     const { name, phone, cpf, birthday } = req.body;
     const id = req.params.id;
-    if (isNaN(cpf)) return res.status(400).send('cpf must only contain numbers')
+    if (isNaN(cpf)) return res.status(400).send('cpf must only contain numbers');
     try {
         const existentCpf = await db.query(`SELECT * FROM customers
             WHERE cpf = $1 AND id <> $2`

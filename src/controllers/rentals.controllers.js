@@ -51,6 +51,22 @@ export async function getRentals (req, res){
 }
 
 export async function finishRent (req, res){
+    const id = req.params.id;
+    const dateReturn = dayjs().format('YYYY-MM-DD');
+    try{
+        const rentToBeFinish = await db.query(`SELECT * FROM rentals WHERE id = $1`,[id])
+        const dateRent = rentToBeFinish.rows[0].rentDate.toISOString().slice(0,10);
+        const diferenceOfDates = (new Date(dateReturn) - new Date(dateRent)) / (1000 * 60 * 60 * 24);
+        if(diferenceOfDates > rentToBeFinish.rows[0].daysRented){
+            const feeDelay = diferenceOfDates - rentToBeFinish.rows[0].daysRented
+        }
+        
+        // console.log(dateRent)
+        // console.log(dateReturn)
+        // console.log(diferenceOfDates)
+    }catch(err){
+        res.status(500).send(err.message);
+    }
     res.send('updateRent')
 }
 
