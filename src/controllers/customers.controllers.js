@@ -24,6 +24,7 @@ export async function getCustomers(req, res) {
             const newCustomer = { ...customer, birthday: customer.birthday.toISOString().slice(0, 10) };
             return newCustomer;
         })
+        res.send(formatCustomers);
     } catch (err) {
         res.status(500).send(err.message);
     }
