@@ -52,9 +52,9 @@ export async function updateCustomers(req, res) {
             , [cpf, id]);
         if (existentCpf.rows[0]) return res.status(409).send('This cpf belongs to someone else');
         await db.query(`UPDATE customers 
-            SET name = $1, phone = $2, birthday = $3
-            WHERE id = $4`
-            , [name, phone, birthday, id])
+            SET name = $1, phone = $2, cpf = $3, birthday = $4
+            WHERE id = $5`
+            , [name, phone, cpf, birthday, id])
         res.sendStatus(200);
     } catch (err) {
         res.status(500).send(err.message);
