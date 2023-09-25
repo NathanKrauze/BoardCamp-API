@@ -2,7 +2,6 @@ import { db } from "../database/database.connection.js";
 
 export async function postCustomers(req, res){
     const {name, phone, cpf, birthday} = req.body;
-
     try{
         const haveCustomer = await db.query(`SELECT * FROM customers
             WHERE cpf = $1`,[cpf]);
