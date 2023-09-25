@@ -52,8 +52,7 @@ export async function getRentals (req, res){
 
 export async function finishRent (req, res){
     const id = req.params.id;
-    //const dateReturn = dayjs().format('YYYY-MM-DD');
-    const dateReturn = '2023-09-28'
+    const dateReturn = dayjs().format('YYYY-MM-DD');
     try{
         const rentToBeFinish = await db.query(`SELECT * FROM rentals WHERE id = $1`,[id]);
         if(!rentToBeFinish.rows[0]) return res.status(404).send('this rent does not exixt');
@@ -76,9 +75,18 @@ export async function finishRent (req, res){
     }catch(err){
         res.status(500).send(err.message);
     }
-    res.send('updateRent')
+    res.sendStatus(200)
 }
 
 export async function deleteRent (req, res){
-    res.send('deleteRent')
+    const id = req.params.id;
+    try{
+        const checkRent = await db.query(`SELECT * FROM rentals WHERE id = $1`,[id]);
+        if(!checkRent.rows[0]) return res.status(404).send('this rent does not exist');
+        if(!checkRent.rows[0].returnDate) return res.status(400).send('this rent is not finished yet');
+        await db.query(`DELETE FROM rentals WHERE id = $1`,[id]);
+    }catch(err){
+        res.status(500).send(err.message);
+    }
+    res.sendStatus(200)
 }
